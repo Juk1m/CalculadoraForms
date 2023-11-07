@@ -14,6 +14,9 @@ namespace CalculadoraForms
     {
         int numero1;
         string ultimoOp;
+        bool aperto = false;
+
+
         public Form1()
         {
             InitializeComponent();
@@ -23,32 +26,87 @@ namespace CalculadoraForms
         {
             txbTela.Clear();
         }
+
         private void Operador_Click(object sender, EventArgs e)
         {
-            // Obter o botão que está chamando o evento
             var botao = (Button)sender;
-            numero1 = int.Parse(txbTela.Text);
-            txbTela.Clear();
-            txbAux.Text = numero1.ToString() + botao.Text;
-            ultimoOp = botao.Text;
+            if (aperto == false && txbTela.Text != "" && txbAux.Text == "")
+            {
+                // Obter o botão que está chamando o evento
+                numero1 = int.Parse(txbTela.Text);
+                txbTela.Clear();
+                txbAux.Text = numero1.ToString() + botao.Text;
+                ultimoOp = botao.Text;
+                aperto = true;
 
+            }
+            else
+            {
+                if (txbAux.Text != "" && txbTela.Text != "")
+                {
+                    btnIgual.PerformClick();
+                    txbAux.Text = txbTela.Text + botao.Text;
+                    numero1 = int.Parse(txbTela.Text);
+                    txbTela.Text = "";
+                    ultimoOp = botao.Text;
+                }
+            }
         }
         private void Numero_Click(object sender, EventArgs e)
         {
             // Obter o botão que está chamando o evento
             var botao = (Button)sender;
             txbTela.Text += botao.Text;
-        }
+            aperto = false;
 
+
+
+        }
         private void btnIgual_Click(object sender, EventArgs e)
         {
+            if (txbTela.Text != "")
             switch (ultimoOp)
             {
                 case "+":
                     txbAux.Clear();
                     txbTela.Text = (numero1 + int.Parse(txbTela.Text)).ToString();
                     break;
+
+                case "-":
+                    txbAux.Clear();
+                    txbTela.Text = (numero1 - int.Parse(txbTela.Text)).ToString();
+                    break;
+
+                case "x":
+                    txbAux.Clear();
+                    txbTela.Text = (numero1 * int.Parse(txbTela.Text)).ToString(); break;
+
+                case "÷":
+                    if (int.Parse(txbTela.Text) != 0)
+                    {
+                        txbAux.Clear();
+                        txbTela.Text = (numero1  / int.Parse(txbTela.Text)).ToString(); break;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Dados invalidos");
+
+                    }
+                    break;
             }
+            aperto = false;
+        }
+        private void txbTela_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
+        
+
+        
+        
+          
+        
+    
+
